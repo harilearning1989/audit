@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: emp
+  datasource:
+    employee-db:
+      jdbcUrl: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+      username: EMPLOYEE
+      password: dudkrish1A
+      driver-class-name: oracle.jdbc.OracleDriver
+    audit-db:
+      jdbcUrl: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+      username: AUDIT_API_CALLS
+      password: dudkrish1A
+      driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.OracleDialect
+  main:
+    banner-mode: off
+
+server:
+  port: 8081
