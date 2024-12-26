@@ -51,7 +51,7 @@ public class ServiceAudit {
     private Integer responseStatus;
 
     @Lob
-    @Column(name = "RESPONSE_BODY",nullable = true)
+    @Column(name = "RESPONSE",nullable = true)
     private String response;
 
     @Column(name = "DURATION")
