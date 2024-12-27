@@ -15,17 +15,17 @@ public class CommonWebClient {
     @Autowired
     private AuditExchangeFilter auditExchangeFilter; // Inject the audit filter
 
-    public WebClient creataWebClient(String baseUrl, Map<String, String> headers) {
+    public WebClient createWebClient(String baseUrl, Map<String, String> headers) {
         WebClient.Builder builder = WebClient.builder()
-                .baseUrl(baseUrl)
-                .filter(auditExchangeFilter);
+                .baseUrl(baseUrl);
+                //.filter(auditExchangeFilter);
         headers.forEach(builder::defaultHeader);
         return builder.build();
     }
 
     public <T> T httpServiceProxyFactory(String baseUrl, Map<String, String> headers, Class<T> clientClass) {
         return HttpServiceProxyFactory
-                .builderFor(WebClientAdapter.create(creataWebClient(baseUrl, headers)))
+                .builderFor(WebClientAdapter.create(createWebClient(baseUrl, headers)))
                 .build()
                 .createClient(clientClass);
     }

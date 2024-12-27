@@ -47,8 +47,9 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
         // Save the audit log and store the ID in the request attribute
         auditLog = auditService.saveAudit(auditLog);
-        request.setAttribute(AUDIT_LOG_ID, auditLog.getId());
-
+        if(auditLog != null){
+            request.setAttribute(AUDIT_LOG_ID, auditLog.getId());
+        }
         return true;
     }
 

@@ -1,4 +1,4 @@
-package com.web.demo.condif.ds;
+package com.web.demo.config.ds;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;

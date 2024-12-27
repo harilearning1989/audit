@@ -24,3 +24,7 @@ spring:
 
 server:
   port: 8081
+
+login:
+  rest:
+    jsonPlaceHolder: https://jsonplaceholder.typicode.com/
