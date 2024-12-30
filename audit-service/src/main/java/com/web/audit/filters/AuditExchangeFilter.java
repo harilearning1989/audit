@@ -38,7 +38,7 @@ public class AuditExchangeFilter implements ExchangeFilterFunction {
 
         if (serviceAudit != null) {
             ClientAudit clientAudit = new ClientAudit();
-            clientAudit.setExternalApiUrl(request.url().toString());
+            clientAudit.setRequestUrl(request.url().toString());
             clientAudit.setMethod(request.method().toString());
             clientAudit.setRequestTimestamp(startTime);
             clientAudit.setResponseTimestamp(LocalDateTime.now());

@@ -18,18 +18,19 @@ public class ClientAudit {
 
     @Id
     @Column(name = "ID", nullable = false, updatable = false)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "EXTERNAL_API_URL", nullable = false)
-    private String externalApiUrl;
+    @Column(name = "REQUEST_URI")
+    private String requestUrl;
 
-    @Column(name = "REQUEST_TIMESTAMP", nullable = true)
+    @Column(name = "REQUEST_TIMESTAMP")
     private LocalDateTime requestTimestamp;
 
-    @Column(name = "RESPONSE_TIMESTAMP", nullable = true)
+    @Column(name = "RESPONSE_TIMESTAMP")
     private LocalDateTime responseTimestamp;
 
-    @Column(name = "METHOD", nullable = false)
+    @Column(name = "METHOD")
     private String method;
 
     @Lob
@@ -50,7 +51,15 @@ public class ClientAudit {
     @Column(name = "DURATION")
     private Integer duration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SERVICE_AUDIT_ID", nullable = false)
-    private ServiceAudit serviceAudit;
+    @Column(name = "HOST_NAME")
+    private String hostname;
+
+    @Column(name = "ERROR_MESSAGE")
+    private String errorMessage;
+
+    //private Map<String, String> requestHeadersMap;
+
+    /*@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SERVICE_AUDIT_ID")
+    private ServiceAudit serviceAudit;*/
 }
