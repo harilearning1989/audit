@@ -1,7 +1,9 @@
 package com.web.demo.config.client;
 
 import com.web.audit.config.client.CommonWebClient;
+import com.web.demo.services.client.CommentsRestClient;
 import com.web.demo.services.client.JsonPlaceHolderClient;
+import com.web.demo.services.client.TodosRestClient;
 import com.web.demo.services.client.UsersRestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,5 +43,25 @@ public class WebClientConfig {
         );
         return commonWebClient
                 .httpServiceProxyFactory(jsonPlaceHolder, headers, UsersRestClient.class);
+    }
+
+    @Bean
+    public CommentsRestClient commentsRestClient() {
+        Map<String, String> headers = Map.of(
+                "Authorization", "Bearer your-token",
+                "Custom-Header", "CustomValue"
+        );
+        return commonWebClient
+                .httpServiceProxyFactory(jsonPlaceHolder, headers, CommentsRestClient.class);
+    }
+
+    @Bean
+    public TodosRestClient todosRestClient() {
+        Map<String, String> headers = Map.of(
+                "Authorization", "Bearer your-token",
+                "Custom-Header", "CustomValue"
+        );
+        return commonWebClient
+                .httpServiceProxyFactory(jsonPlaceHolder, headers, TodosRestClient.class);
     }
 }
