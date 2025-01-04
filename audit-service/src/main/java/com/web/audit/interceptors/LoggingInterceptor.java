@@ -1,5 +1,6 @@
 package com.web.audit.interceptors;
 
+import com.web.audit.context.AuditContext;
 import com.web.audit.entities.ServiceAudit;
 import com.web.audit.services.AuditService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,9 +48,11 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
         // Save the audit log and store the ID in the request attribute
         auditLog = auditService.saveAudit(auditLog);
-        if(auditLog != null){
+        if (auditLog != null) {
             request.setAttribute(AUDIT_LOG_ID, auditLog.getId());
         }
+
+        AuditContext.setServiceAudit(auditLog);
         return true;
     }
 
@@ -59,27 +62,32 @@ public class LoggingInterceptor implements HandlerInterceptor {
         Long auditLogId = (Long) request.getAttribute(AUDIT_LOG_ID);
         if (auditLogId == null) return;
 
-        Optional<ServiceAudit> auditLogOptional = auditService.findById(auditLogId);
-        if (auditLogOptional.isPresent()) {
-            ServiceAudit auditLog = auditLogOptional.get();
-            auditLog.setResponseStatus(response.getStatus());
-            //auditLog.setResponseHeaders(getHeadersAsString(response));
-            auditLog.setResponseTimestamp(LocalDateTime.now());
-            // Calculate the duration
-            Long startTime = (Long) request.getAttribute(START_TIME);
-            long duration = System.currentTimeMillis() - startTime;
-            auditLog.setDuration(duration);
+        try {
+            Optional<ServiceAudit> auditLogOptional = auditService.findById(auditLogId);
+            if (auditLogOptional.isPresent()) {
+                ServiceAudit auditLog = auditLogOptional.get();
+                auditLog.setResponseStatus(response.getStatus());
+                //auditLog.setResponseHeaders(getHeadersAsString(response));
+                auditLog.setResponseTimestamp(LocalDateTime.now());
+                // Calculate the duration
+                Long startTime = (Long) request.getAttribute(START_TIME);
+                long duration = System.currentTimeMillis() - startTime;
+                auditLog.setDuration(duration);
 
-            if (ex != null) {
-                auditLog.setErrorMessage(ex.getMessage());
-            } else {
-                // Update the audit log with the response body
+                if (ex != null) {
+                    auditLog.setErrorMessage(ex.getMessage());
+                } else {
+                    // Update the audit log with the response body
                /* CaptureResponseWrapper captureResponseWrapper = (CaptureResponseWrapper) response;
                 byte[] responseData = captureResponseWrapper.getResponseData();
                 auditLog.setResponseBody(new String(responseData));*/
+                }
+                auditService.saveAudit(auditLog);
             }
-            auditService.saveAudit(auditLog);
+        } finally {
+            AuditContext.clear(); // Clear ThreadLocal to avoid memory leaks
         }
+
         LOGGER.info("Service Audit data in afterCompletion ending");
     }
 

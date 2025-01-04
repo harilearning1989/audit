@@ -2,6 +2,7 @@ package com.web.demo.config.client;
 
 import com.web.audit.config.client.CommonWebClient;
 import com.web.demo.services.client.JsonPlaceHolderClient;
+import com.web.demo.services.client.UsersRestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,15 @@ public class WebClientConfig {
         );
         return commonWebClient
                 .httpServiceProxyFactory(jsonPlaceHolder, headers, JsonPlaceHolderClient.class);
+    }
+
+    @Bean
+    public UsersRestClient usersRestClient() {
+        Map<String, String> headers = Map.of(
+                "Authorization", "Bearer your-token",
+                "Custom-Header", "CustomValue"
+        );
+        return commonWebClient
+                .httpServiceProxyFactory(jsonPlaceHolder, headers, UsersRestClient.class);
     }
 }

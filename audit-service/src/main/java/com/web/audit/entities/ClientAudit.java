@@ -59,7 +59,7 @@ public class ClientAudit {
 
     //private Map<String, String> requestHeadersMap;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SERVICE_AUDIT_ID")
-    private ServiceAudit serviceAudit;*/
+    private ServiceAudit serviceAudit;
 }

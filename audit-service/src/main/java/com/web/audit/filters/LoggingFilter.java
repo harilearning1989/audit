@@ -1,6 +1,8 @@
 package com.web.audit.filters;
 
+import com.web.audit.context.AuditContext;
 import com.web.audit.entities.ClientAudit;
+import com.web.audit.entities.ServiceAudit;
 import com.web.audit.repos.ClientAuditRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +26,13 @@ public class LoggingFilter {
     public ExchangeFilterFunction logRequestAndResponse() {
         return (request, next) -> {
             ClientAudit logDetails = createLogDetailsFromRequest(request);
+            ServiceAudit serviceAudit = AuditContext.getServiceAudit();
+            logDetails.setServiceAudit(serviceAudit);
+            LOGGER.info("logRequestAndResponse() ServiceAudit logDetails::{}", serviceAudit);
             ClientAudit logDetailsTmp = logDetailsRepository.save(logDetails);
             logDetails.setRequestTimestamp(LocalDateTime.now());
             logDetails.setId(logDetailsTmp.getId());
-            LOGGER.info("ClientAudit logDetails::{}", logDetails);
+            LOGGER.info("logRequestAndResponse() ClientAudit logDetails::{}", logDetails);
             return next.exchange(request)
                     .flatMap(response -> handleResponse(response, logDetails))
                     .doOnError(error -> handleError(logDetails, error));
@@ -52,7 +57,7 @@ public class LoggingFilter {
         return response.bodyToMono(String.class)
                 .defaultIfEmpty("")
                 .flatMap(responseBody -> {
-                    logDetails.setResponse(responseBody);
+                    //logDetails.setResponse(responseBody);
                     logDetails.setResponseTimestamp(LocalDateTime.now());
                     logDetails.setResponseStatus(response.statusCode().value());
                     if (response.statusCode().isError()) {
